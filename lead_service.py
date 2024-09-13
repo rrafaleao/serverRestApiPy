@@ -11,6 +11,9 @@ class LeadService:
 
 	def get_all_leads(self):
 		return Lead.query.all()
+	
+	def get_all_leads(self, page, per_page):
+		return Lead.query.paginate(page=page, per_page=per_page, error_out=False)
 
 	def get_lead_by_id(self, lead_id):
 		return Lead.query.get_or_404(lead_id)

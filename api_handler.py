@@ -13,8 +13,15 @@ class LeadAPIHandler:
 		
 	# Retorna todos os leads
 	def get_leads(self):
-		leads = self.lead_service.get_all_leads()
-		return jsonify([lead.as_dict() for lead in leads])
+		page = request.args.get('page', 1, int)
+		per_page = request.args.get('per_page', 20, int)
+
+		leads_pagination = self.lead_service.get_all_leads(page, per_page)
+		leads = [lead.as_dict() for lead in leads_pagination.items]
+        
+		return jsonify({
+			'leads': leads
+        })
 
 	# Retorna um lead específico
 	def get_lead(self, id):
@@ -34,7 +41,6 @@ class LeadAPIHandler:
 			telefone=data['telefone']
     	)
 		return jsonify({"message": "Lead criado com sucesso!"}), 201
-
 	# Atualiza um lead existente
 	def update_lead(self, id):
 		data = request.json
